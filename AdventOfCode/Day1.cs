@@ -51,10 +51,9 @@
             // Top Three sum
             var topThreeTotalCalories = topThreeElves.Sum(x => x.Value);
 
-            Console.WriteLine();
             Console.WriteLine($"Elve #{dictElvesAndCalories.FirstOrDefault(x => x.Value == maxCalories).Key} is carrying {maxCalories} calories.");
             Console.WriteLine();
-            Console.WriteLine("--------------------------------------------------");
+            Console.WriteLine("---------------------------------------------------");
             Console.WriteLine();
             Console.WriteLine($"Top three elves are carrying a total of {topThreeTotalCalories} calories.");
             Console.WriteLine();
@@ -65,7 +64,7 @@
             }
 
             Console.WriteLine();
-            Console.WriteLine("============== End of Code for Day1 ==============");
+            Console.WriteLine("============== End of Code for Day1 ===============");
             Console.WriteLine();
         }
     }

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AdventOfCode
+﻿namespace AdventOfCode
 {
     // https://adventofcode.com/2022/day/2
     internal class Day2
     {
+        // Part 1
+
         // A => Rock    X => Rock
         // B => Paper   Y => Paper
         // C => Scissor Z => Scissor
@@ -43,39 +39,32 @@ namespace AdventOfCode
             { "C Z", 6 }
         };
 
-        private static Dictionary<string, string> _win = new Dictionary<string, string>
-        {
-            { "A", "Y" },
-            { "B", "Z" },
-            { "C", "X" }
-        };
+        // Part 2
 
-        private static Dictionary<string, string> _draw = new Dictionary<string, string>
-        {
-            { "A", "X" },
-            { "B", "Y" },
-            { "C", "Z" }
-        };
+        // X => You Lose
+        // Y => Draw
+        // Z => You Win
 
-        private static Dictionary<string, string> _lose = new Dictionary<string, string>
+        // A x X = Z
+        // A x Y = X
+        // A x Z = Y
+        // B x X = X
+        // B x Y = Y
+        // B x Z = Z
+        // C x X = Y
+        // C x Y = Z
+        // C x Z = X
+        private static Dictionary<string, string> _transformations = new Dictionary<string, string>
         {
-            { "A", "Z" },
-            { "B", "X" },
-            { "C", "Y" }
-        };
-
-        private static Dictionary<string, int> _shapeValues = new Dictionary<string, int>
-        {
-            { "X", 1 },
-            { "Y", 2 },
-            { "Z", 3 }
-        };
-
-        private static Dictionary<string, int> _conditionValues = new Dictionary<string, int>
-        {
-            { "WIN", 6 },
-            { "DRAW", 3 },
-            { "LOSE", 0 }
+            { "A X", "Z" },
+            { "A Y", "X" },
+            { "A Z", "Y" },
+            { "B X", "X" },
+            { "B Y", "Y" },
+            { "B Z", "Z" },
+            { "C X", "Y" },
+            { "C Y", "Z" },
+            { "C Z", "X" }
         };
 
         public static void Run()
@@ -96,13 +85,20 @@ namespace AdventOfCode
             Console.WriteLine($"Final Score: {score}");
             Console.WriteLine();
 
+            score = 0;
+
             foreach (var line in input)
             {
-
+                var decisions = line.Split(' ');
+                var strategyDecision = line.Replace(decisions[1], _transformations[line]);
+                score += _values[strategyDecision];
             }
 
+            Console.WriteLine($"Final Score with adjusted strategy: {score}");
             Console.WriteLine();
-            Console.WriteLine("============== End of Code for Day2 ==============");
+
+            Console.WriteLine();
+            Console.WriteLine("============== End of Code for Day2 ===============");
             Console.WriteLine();
         }
     }
