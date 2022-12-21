@@ -1,10 +1,19 @@
-﻿using AdventOfCode;
+﻿using System.Reflection;
 
-Day1.Run();
-Day2.Run();
-Day3.Run();
-Day4.Run();
-Day5.Run();
-Day6.Run();
+var assembly = Assembly.GetExecutingAssembly();
+
+var types = assembly.GetTypes().Where(x => x.Name.StartsWith("Day"));
+
+foreach (var type in types)
+{
+    if (type.Name == "Day")
+        continue;
+
+    var instance = Activator.CreateInstance(type);
+
+    instance?.GetType()
+            .GetMethod("Execute")?
+            .Invoke(instance, null);
+}
 
 Console.ReadKey();

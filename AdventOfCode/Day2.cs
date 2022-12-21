@@ -1,8 +1,12 @@
 ﻿namespace AdventOfCode
 {
     // https://adventofcode.com/2022/day/2
-    internal class Day2
+    internal class Day2 : Day
     {
+        public Day2() : base(2)
+        {
+        }
+
         // Part 1
 
         // A => Rock    X => Rock
@@ -67,14 +71,8 @@
             { "C Z", "X" }
         };
 
-        public static void Run()
+        protected override void RunLogic(string[] input)
         {
-            Console.WriteLine("============== Running Code for Day2 ==============");
-            Console.WriteLine();
-
-            // Input Data: https://adventofcode.com/2022/day/2/input
-
-            var input = File.ReadAllLines("./Input/Day2.txt");
             var score = 0;
 
             foreach (var line in input)
@@ -95,10 +93,6 @@
             }
 
             Console.WriteLine($"Final Score with adjusted strategy: {score}");
-            Console.WriteLine();
-
-            Console.WriteLine();
-            Console.WriteLine("============== End of Code for Day2 ===============");
             Console.WriteLine();
         }
     }

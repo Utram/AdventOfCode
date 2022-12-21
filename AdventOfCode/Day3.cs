@@ -1,8 +1,12 @@
 ﻿namespace AdventOfCode
 {
     // https://adventofcode.com/2022/day/3
-    internal class Day3
+    internal class Day3 : Day
     {
+        public Day3() : base(3)
+        {
+        }
+
         private static Dictionary<char, int> _priorities = new Dictionary<char, int>
         {
             { 'a', 1 },
@@ -59,15 +63,8 @@
             { 'Z', 52 }
         };
 
-        public static void Run()
+        protected override void RunLogic(string[] input)
         {
-            Console.WriteLine("============== Running Code for Day3 ==============");
-            Console.WriteLine();
-
-            // Input Data: https://adventofcode.com/2022/day/3/input
-
-            var input = File.ReadAllLines("./Input/Day3.txt");
-            
             // Part 1
             var score = 0;
 
@@ -110,11 +107,6 @@
             }
 
             Console.WriteLine($"Group Score: {score}");
-
-            Console.WriteLine();
-            Console.WriteLine("============== End of Code for Day3 ===============");
-            Console.WriteLine();
         }
     }
 }
-

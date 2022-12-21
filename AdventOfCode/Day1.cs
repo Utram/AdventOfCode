@@ -1,17 +1,14 @@
 ﻿namespace AdventOfCode
 {
     // https://adventofcode.com/2022/day/1
-    internal class Day1
+    internal class Day1 : Day
     {
-        public static void Run()
+        public Day1() : base(1)
         {
-            Console.WriteLine("============== Running Code for Day1 ==============");
-            Console.WriteLine();
+        }
 
-            // Input Data: https://adventofcode.com/2022/day/1/input
-
-            var input = File.ReadAllLines("./Input/Day1.txt");
-            
+        protected override void RunLogic(string[] input)
+        {
             var i = 0;
             var elveId = 0;
             var currentElveTotalCalories = 0;
@@ -62,10 +59,6 @@
             {
                 Console.WriteLine($"Elve #{elve.Key} is carrying {elve.Value} calories.");
             }
-
-            Console.WriteLine();
-            Console.WriteLine("============== End of Code for Day1 ===============");
-            Console.WriteLine();
         }
     }
 }

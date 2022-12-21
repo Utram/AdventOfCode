@@ -3,23 +3,16 @@
 namespace AdventOfCode
 {
     // https://adventofcode.com/2022/day/6
-    internal class Day6
+    internal class Day6 : Day
     {
-        public static void Run()
+        public Day6() : base(6)
         {
-            Console.WriteLine("============== Running Code for Day6 ==============");
-            Console.WriteLine();
+        }
 
-            // Input Data: https://adventofcode.com/2022/day/6/input
-
-            var input = File.ReadAllLines("./Input/Day6.txt");
-
+        protected override void RunLogic(string[] input)
+        {
             DetectStartOfMarker("Start-Of-Packet", 4, input[0]);
             DetectStartOfMarker("Start-Of-Message", 14, input[0]);
-
-            Console.WriteLine();
-            Console.WriteLine("============== End of Code for Day6 ===============");
-            Console.WriteLine();
         }
 
         private static void DetectStartOfMarker(string markerType, int markerLength, string input)

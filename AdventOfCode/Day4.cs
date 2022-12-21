@@ -1,17 +1,14 @@
 ﻿namespace AdventOfCode
 {
     // https://adventofcode.com/2022/day/4
-    internal class Day4
+    internal class Day4 : Day
     {
-        public static void Run()
+        public Day4() : base(4)
         {
-            Console.WriteLine("============== Running Code for Day4 ==============");
-            Console.WriteLine();
+        }
 
-            // Input Data: https://adventofcode.com/2022/day/4/input
-
-            var input = File.ReadAllLines("./Input/Day4.txt");
-
+        protected override void RunLogic(string[] input)
+        {
             var completeOverlaps = 0;
             var partialOverlaps = 0;
 
@@ -36,7 +33,7 @@
                     completeOverlaps++;
                 }
 
-                if (rangeOne.Start.Value <= rangeTwo.End.Value && 
+                if (rangeOne.Start.Value <= rangeTwo.End.Value &&
                     rangeTwo.Start.Value <= rangeOne.End.Value)
                 {
                     partialOverlaps++;
@@ -45,10 +42,6 @@
 
             Console.WriteLine($"Amount of complete overlaps: {completeOverlaps}");
             Console.WriteLine($"Amount of partial overlaps: {partialOverlaps}");
-
-            Console.WriteLine();
-            Console.WriteLine("============== End of Code for Day4 ===============");
-            Console.WriteLine();
         }
     }
 }

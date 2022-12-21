@@ -1,18 +1,14 @@
-﻿using System.ComponentModel;
-
-namespace AdventOfCode
+﻿namespace AdventOfCode
 {
     // https://adventofcode.com/2022/day/5
-    internal class Day5
+    internal class Day5 : Day
     {
-        public static void Run()
+        public Day5() : base(5)
         {
-            Console.WriteLine("============== Running Code for Day5 ==============");
-            Console.WriteLine();
+        }
 
-            // Input Data: https://adventofcode.com/2022/day/5/input
-
-            var input = File.ReadAllLines("./Input/Day5.txt");
+        protected override void RunLogic(string[] input)
+        {
             var initialContainerSetup = input.Take(8)
                                              .Reverse()
                                              .ToArray();
@@ -70,10 +66,6 @@ namespace AdventOfCode
 
             // Print output
             PrintSolution("Part Two solution:", partTwoContainers);
-
-            Console.WriteLine();
-            Console.WriteLine("============== End of Code for Day5 ===============");
-            Console.WriteLine();
         }
 
         private static Dictionary<int, Stack<char>> GenerateContainerDictionary(string[] initialSetup)
