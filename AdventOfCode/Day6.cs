@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace AdventOfCode
+﻿namespace AdventOfCode
 {
     // https://adventofcode.com/2022/day/6
     internal class Day6 : Day
