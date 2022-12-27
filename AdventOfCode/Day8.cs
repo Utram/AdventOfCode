@@ -117,7 +117,6 @@
             return visibilityTop || visibilityBottom || visibilityRight || visibilityLeft;
         }
 
-        // TODO: METHODE KORRIGIEREN!
         // Checks the viewing range for each side and calculates the resulting score
         private int CalculateScenicScore(int x, int y)
         {
@@ -131,53 +130,64 @@
             // To the right
             for (int i = x; i < xMax; i++)
             {
-                if (x == xMax || i != x && treeHeight <= _forestHeights[i, y])
+                if (x == i)
                 {
-                    //viewRangeRight = i - x; // End - Start
+                    continue;
+                }
+
+                viewRangeRight++;
+
+                if (treeHeight <= _forestHeights[i, y])
+                {
                     break;
-                } else
-                {
-                    viewRangeRight++;
                 }
             }
 
             // To the left
             for (int i = x; i >= 0; i--)
             {
-                if (x == 0 || i != x && treeHeight <= _forestHeights[i, y])
+                if (x == i)
                 {
-                    //viewRangeLeft = x - i; // Start - End
-                    break;
-                } else
-                {
-                    viewRangeLeft++;
+                    continue;
                 }
-            }
 
-            // To the top
-            for (int i = y; i < yMax; i++)
-            {
-                if (y == 0 || i != y && treeHeight <= _forestHeights[x, i])
+                viewRangeLeft++;
+
+                if (treeHeight <= _forestHeights[i, y])
                 {
-                    //viewRangeTop = i - y; // End - Start
                     break;
-                }
-                else
-                {
-                    viewRangeTop++;
                 }
             }
 
             // To the bottom
+            for (int i = y; i < yMax; i++)
+            {
+                if (y == i)
+                {
+                    continue;
+                }
+
+                viewRangeBottom++;
+
+                if (treeHeight <= _forestHeights[x, i])
+                {
+                    break;
+                }
+            }
+
+            // To the top
             for (int i = y; i >= 0; i--)
             {
-                if (y == yMax || i != y && treeHeight <= _forestHeights[x, i])
+                if (y == i)
                 {
-                    //viewRangeBottom = y - i; // Start - End
+                    continue;
+                }
+
+                viewRangeTop++;
+
+                if (treeHeight <= _forestHeights[x, i])
+                {
                     break;
-                } else
-                {
-                    viewRangeBottom++;
                 }
             }
 
