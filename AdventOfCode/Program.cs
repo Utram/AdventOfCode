@@ -2,7 +2,10 @@
 
 var assembly = Assembly.GetExecutingAssembly();
 
-var types = assembly.GetTypes().Where(x => x.Name.StartsWith("Day"));
+var namespaceYear2022 = "Y2022";
+var namespaceYear2023 = "Y2023";
+
+var types = assembly.GetTypes().Where(x => x.Name.StartsWith("Day") && x.Namespace != null && x.Namespace.EndsWith(namespaceYear2023));
 
 foreach (var type in types)
 {

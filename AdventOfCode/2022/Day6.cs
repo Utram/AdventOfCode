@@ -1,9 +1,9 @@
-﻿namespace AdventOfCode
+﻿namespace AdventOfCode.Y2022
 {
     // https://adventofcode.com/2022/day/6
     internal class Day6 : Day
     {
-        public Day6() : base(6)
+        public Day6() : base(2022, 6)
         {
         }
 
