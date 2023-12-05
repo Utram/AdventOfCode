@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AdventOfCode.Y2023
 {
-    // https://adventofcode.com/2023/day/1
+    // https://adventofcode.com/2023/day/2
     internal class Day2 : Day
     {
         public Day2() : base(2023, 2)
@@ -19,7 +19,7 @@ namespace AdventOfCode.Y2023
         {
             // Part 1
 
-            var gameIdSum = 0;
+            var sumOfGameIds = 0;
 
             var redUpperLimit = 12;
             var greenUpperLimit = 13;
@@ -33,17 +33,17 @@ namespace AdventOfCode.Y2023
 
             for (var i = 0; i < input.Length; i++)
             {
-                var sets       = input[i].Split(":", StringSplitOptions.TrimEntries)[1].Split(";");
-                var games      = sets.SelectMany(x => x.Split(";", StringSplitOptions.TrimEntries));
-                var redRolls   = games.SelectMany(x => x.Split(",")
+                var sets       = input[i].Split(":", StringSplitOptions.TrimEntries)[1].Split(";", StringSplitOptions.TrimEntries);
+                
+                var redRolls   = sets.SelectMany(x => x.Split(",")
                                                         .Where(x => x.Contains("red"))
                                                         .Select(x => int.Parse(x.Split(" ", StringSplitOptions.RemoveEmptyEntries)[0])));
 
-                var greenRolls = games.SelectMany(x => x.Split(",")
+                var greenRolls = sets.SelectMany(x => x.Split(",")
                                                         .Where(x => x.Contains("green"))
                                                         .Select(x => int.Parse(x.Split(" ", StringSplitOptions.RemoveEmptyEntries)[0])));
 
-                var blueRolls  = games.SelectMany(x => x.Split(",")
+                var blueRolls  = sets.SelectMany(x => x.Split(",")
                                                         .Where(x => x.Contains("blue"))
                                                         .Select(x => int.Parse(x.Split(" ", StringSplitOptions.RemoveEmptyEntries)[0])));
 
@@ -53,15 +53,42 @@ namespace AdventOfCode.Y2023
 
                 if (!isAnyLimitViolated)
                 {
-                    gameIdSum += i + 1;
+                    sumOfGameIds += i + 1;
                 }
             }
             
             Console.WriteLine();
-            Console.WriteLine($"Sum of valid GameIds: {gameIdSum}");
+            Console.WriteLine($"Sum of valid GameIds: {sumOfGameIds}");
             Console.WriteLine();
 
             // Part 2
+
+            var sumOfMinSetPower = 0d;
+
+            for (var i = 0; i < input.Length; i++)
+            {
+                var sets     = input[i].Split(":", StringSplitOptions.TrimEntries)[1].Split(";", StringSplitOptions.TrimEntries);
+                
+                var redRolls   = sets.SelectMany(x => x.Split(",")
+                                                        .Where(x => x.Contains("red"))
+                                                        .Select(x => int.Parse(x.Split(" ", StringSplitOptions.RemoveEmptyEntries)[0])));
+
+                var greenRolls = sets.SelectMany(x => x.Split(",")
+                                                        .Where(x => x.Contains("green"))
+                                                        .Select(x => int.Parse(x.Split(" ", StringSplitOptions.RemoveEmptyEntries)[0])));
+
+                var blueRolls  = sets.SelectMany(x => x.Split(",")
+                                                        .Where(x => x.Contains("blue"))
+                                                        .Select(x => int.Parse(x.Split(" ", StringSplitOptions.RemoveEmptyEntries)[0])));
+
+                var maxRedCubes   = redRolls.Max();
+                var maxGreenCubes = greenRolls.Max();
+                var maxBlueCubes  = blueRolls.Max();
+
+                var powerOfMinCubes = maxRedCubes * maxGreenCubes * maxBlueCubes;
+
+                sumOfMinSetPower += powerOfMinCubes;
+            }
 
             Console.WriteLine();
             Console.WriteLine("Part 2");
@@ -69,6 +96,7 @@ namespace AdventOfCode.Y2023
 
 
             Console.WriteLine();
+            Console.WriteLine($"Sum of power of minimum sets: {sumOfMinSetPower}");
             Console.WriteLine();
             Console.WriteLine("---------------------------------------------------");
             Console.WriteLine();
