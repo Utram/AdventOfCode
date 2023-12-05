@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -74,7 +75,7 @@ namespace AdventOfCode.Y2023
                         var partNumberString = string.Join("", partDigits.ToArray());
                         var partNumber = int.Parse(partNumberString);
 
-                        partNumbers.Add(new (partNumber, hasAdjacentSymbol));
+                        partNumbers.Add((partNumber, hasAdjacentSymbol));
                         partDigits.Clear();
                         hasAdjacentSymbol = false;
                     }
@@ -94,6 +95,59 @@ namespace AdventOfCode.Y2023
             Console.WriteLine("Part 2");
             Console.WriteLine();
 
+            var gearCoordinates = new List<(int Row, int Column)>();
+
+            for (int row = 0; row < 140; row++)
+            {
+                for (int column = 0; column < 140; column++)
+                {
+                    if (IsSymbol(board[row, column]))
+                    {
+                        gearCoordinates.Add((row, column));
+                    }
+                }
+            }
+
+            var coordinatesWithExactlyTwoAdjacentPartNumbers = new List<(int Row, int Column)>();
+
+            foreach (var coordinate in gearCoordinates)
+            {
+                var adjacentPartNumbersCount = 0;
+
+                // Check Top Row
+                if (coordinate.Row > 0 && char.IsDigit(board[coordinate.Row - 1, coordinate.Column])     ||
+                    coordinate.Row > 0 && char.IsDigit(board[coordinate.Row - 1, coordinate.Column + 1]) ||
+                    coordinate.Row > 0 && char.IsDigit(board[coordinate.Row - 1, coordinate.Column - 1]))
+                {
+                    adjacentPartNumbersCount++;
+                }
+
+                // Check Bottom Row
+                if (coordinate.Row < 139 && char.IsDigit(board[coordinate.Row + 1, coordinate.Column]) ||
+                    coordinate.Row < 139 && char.IsDigit(board[coordinate.Row + 1, coordinate.Column + 1]) ||
+                    coordinate.Row < 139 && char.IsDigit(board[coordinate.Row + 1, coordinate.Column - 1]))
+                {
+                    adjacentPartNumbersCount++;
+                }
+
+                // Check Left
+                if (coordinate.Column > 0   && char.IsDigit(board[coordinate.Row, coordinate.Column - 1]))
+                {
+                    adjacentPartNumbersCount++;
+                }
+
+                // Check Right
+                if (coordinate.Column < 139 && char.IsDigit(board[coordinate.Row, coordinate.Column + 1]))
+                {
+                    adjacentPartNumbersCount++;
+                }
+
+                if (adjacentPartNumbersCount == 2)
+                {
+                    
+                    coordinatesWithExactlyTwoAdjacentPartNumbers.Add((coordinate.Row, coordinate.Column));
+                }
+            }
 
             Console.WriteLine();
             Console.WriteLine();
@@ -110,6 +164,11 @@ namespace AdventOfCode.Y2023
             }
 
             return false;
+        }
+
+        private bool IsGear(char symbol)
+        {
+            return symbol == '*';
         }
     }
 }
