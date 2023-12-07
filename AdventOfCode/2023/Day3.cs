@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -101,14 +102,14 @@ namespace AdventOfCode.Y2023
             {
                 for (int column = 0; column < 140; column++)
                 {
-                    if (IsSymbol(board[row, column]))
+                    if (IsGear(board[row, column]))
                     {
                         gearCoordinates.Add((row, column));
                     }
                 }
             }
 
-            var coordinatesWithExactlyTwoAdjacentPartNumbers = new List<(int Row, int Column)>();
+            var coordinatesWithExactlyTwoAdjacentPartNumbers = new List<(int Row, int Column, List<int> PartNumbers)>();
 
             foreach (var coordinate in gearCoordinates)
             {
@@ -121,7 +122,6 @@ namespace AdventOfCode.Y2023
                 {
                     adjacentPartNumbersCount++;
                 }
-
                 // Check Bottom Row
                 if (coordinate.Row < 139 && char.IsDigit(board[coordinate.Row + 1, coordinate.Column]) ||
                     coordinate.Row < 139 && char.IsDigit(board[coordinate.Row + 1, coordinate.Column + 1]) ||
@@ -129,13 +129,11 @@ namespace AdventOfCode.Y2023
                 {
                     adjacentPartNumbersCount++;
                 }
-
                 // Check Left
                 if (coordinate.Column > 0   && char.IsDigit(board[coordinate.Row, coordinate.Column - 1]))
                 {
                     adjacentPartNumbersCount++;
                 }
-
                 // Check Right
                 if (coordinate.Column < 139 && char.IsDigit(board[coordinate.Row, coordinate.Column + 1]))
                 {
@@ -144,26 +142,168 @@ namespace AdventOfCode.Y2023
 
                 if (adjacentPartNumbersCount == 2)
                 {
-                    
-                    coordinatesWithExactlyTwoAdjacentPartNumbers.Add((coordinate.Row, coordinate.Column));
+                    coordinatesWithExactlyTwoAdjacentPartNumbers.Add((coordinate.Row, coordinate.Column, new List<int>()));
                 }
             }
 
+            var digits = new List<char>();
+            var partNumbers2 = new List<int>();
+
+            foreach (var coordinate in coordinatesWithExactlyTwoAdjacentPartNumbers)
+            {
+                var index = 1;
+
+                // Above
+                if ((coordinate.Row > 0) && char.IsDigit(board[coordinate.Row - 1, coordinate.Column]))
+                {
+                    digits.Add(board[coordinate.Row - 1, coordinate.Column]);
+
+                    while ((coordinate.Column - index) >= 0 && char.IsDigit(board[coordinate.Row - 1, coordinate.Column - index]))
+                    {
+                        digits.Insert(0, board[coordinate.Row - 1, coordinate.Column - index]);
+                        index++;
+                    }
+
+                    index = 1;
+
+                    while ((coordinate.Column + index) <= 139 && char.IsDigit(board[coordinate.Row - 1, coordinate.Column + index]))
+                    {
+                        digits.Add(board[coordinate.Row - 1, coordinate.Column + index]);
+                        index++;
+                    }
+
+                    index = 1;
+
+                    CombineDigitsAndAddToCoordinate(digits, partNumbers2, coordinate);
+                }
+                else if (char.IsDigit(board[coordinate.Row - 1, coordinate.Column + 1]))
+                {
+                    while ((coordinate.Column + index) <= 139 && char.IsDigit(board[coordinate.Row - 1, coordinate.Column + index]))
+                    {
+                        digits.Add(board[coordinate.Row - 1, coordinate.Column + index]);
+                        index++;
+                    }
+
+                    index = 1;
+                    CombineDigitsAndAddToCoordinate(digits, partNumbers2, coordinate);
+                }
+                else if (char.IsDigit(board[coordinate.Row - 1, coordinate.Column - 1]))
+                {
+                    while ((coordinate.Column - index) >= 0 && char.IsDigit(board[coordinate.Row - 1, coordinate.Column - index]))
+                    {
+                        digits.Insert(0, board[coordinate.Row - 1, coordinate.Column - index]);
+                        index++;
+                    }
+
+                    index = 1;
+                    CombineDigitsAndAddToCoordinate(digits, partNumbers2, coordinate);
+                }
+
+                // Below
+                if ((coordinate.Row < 139) && char.IsDigit(board[coordinate.Row + 1, coordinate.Column]))
+                {
+                    digits.Add(board[coordinate.Row + 1, coordinate.Column]);
+
+                    while ((coordinate.Column - index) >= 0 && char.IsDigit(board[coordinate.Row + 1, coordinate.Column - index]))
+                    {
+                        digits.Insert(0, board[coordinate.Row + 1, coordinate.Column - index]);
+                        index++;
+                    }
+
+                    index = 1;
+
+                    while ((coordinate.Column + index) <= 139 && char.IsDigit(board[coordinate.Row + 1, coordinate.Column + index]))
+                    {
+                        digits.Add(board[coordinate.Row + 1, coordinate.Column + index]);
+                        index++;
+                    }
+
+                    index = 1;
+                    CombineDigitsAndAddToCoordinate(digits, partNumbers2, coordinate);
+                }
+                else if (char.IsDigit(board[coordinate.Row + 1, coordinate.Column + 1]))
+                {
+                    while ((coordinate.Column + index) <= 139 && char.IsDigit(board[coordinate.Row + 1, coordinate.Column + index]))
+                    {
+                        digits.Add(board[coordinate.Row + 1, coordinate.Column + index]);
+                        index++;
+                    }
+
+                    index = 1;
+                    CombineDigitsAndAddToCoordinate(digits, partNumbers2, coordinate);
+                } 
+                else if (char.IsDigit(board[coordinate.Row + 1, coordinate.Column - 1]))
+                {
+                    while ((coordinate.Column - index) >= 0 && char.IsDigit(board[coordinate.Row + 1, coordinate.Column - index]))
+                    {
+                        digits.Insert(0, board[coordinate.Row + 1, coordinate.Column - index]);
+                        index++;
+                    }
+
+                    index = 1;
+                    CombineDigitsAndAddToCoordinate(digits, partNumbers2, coordinate);
+                }
+
+                // Right
+                if (coordinate.Column < 139 && char.IsDigit(board[coordinate.Row, coordinate.Column + 1]))
+                {
+                    while ((coordinate.Column + index) <= 139 && char.IsDigit(board[coordinate.Row, coordinate.Column + index]))
+                    {
+                        digits.Add(board[coordinate.Row, coordinate.Column + index]);
+                        index++;
+                    }
+
+                    index = 1;
+                    CombineDigitsAndAddToCoordinate(digits, partNumbers2, coordinate);
+                }
+
+                // Left
+                if (coordinate.Column > 0 && char.IsDigit(board[coordinate.Row, coordinate.Column - 1]))
+                {
+                    while ((coordinate.Column - index) >= 0 && char.IsDigit(board[coordinate.Row, coordinate.Column - index]))
+                    {
+                        digits.Insert(0, board[coordinate.Row, coordinate.Column - index]);
+                        index++;
+                    }
+
+                    index = 1;
+                    CombineDigitsAndAddToCoordinate(digits, partNumbers2, coordinate);
+                }
+            }
+
+            var resultSet = coordinatesWithExactlyTwoAdjacentPartNumbers.Select(x => new 
+            {
+                Row = x.Row,
+                Column = x.Column,
+                PartNumbers = x.PartNumbers,
+                // Multiplizieren aller Enthaltener Teilenummern per Aggregate
+                GearRatio = x.PartNumbers.Aggregate((y,z) => y * z)
+            });
+
+            var sumOfAllGearRatios = resultSet.Sum(x => x.GearRatio);
+
             Console.WriteLine();
-            Console.WriteLine();
+            Console.WriteLine($"Sum of all gear ratios: {sumOfAllGearRatios}");
             Console.WriteLine();
             Console.WriteLine("---------------------------------------------------");
             Console.WriteLine();
         }
 
+        private void CombineDigitsAndAddToCoordinate(List<char> digits, List<int> partNumbers, (int Row, int Column, List<int> PartNumbers) coordinate)
+        {
+            if (digits.Count > 0)
+            {
+                var partNumberString = string.Join("", digits.ToArray());
+                var partNumber = int.Parse(partNumberString);
+                partNumbers.Add(partNumber);
+                coordinate.PartNumbers.Add(partNumber);
+                digits.Clear();
+            }
+        }
+
         private bool IsSymbol(char symbol)
         {
-            if (symbol != '.' && !char.IsDigit(symbol))
-            {
-                return true;
-            }
-
-            return false;
+            return symbol != '.' && !char.IsDigit(symbol);
         }
 
         private bool IsGear(char symbol)
